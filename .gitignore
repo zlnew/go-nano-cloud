@@ -1,0 +1,23 @@
+# ENV
+.env
+
+# Upload files (local storage)
+uploads/*
+!uploads/.gitkeep
+
+# Build artifacts
+*.out
+*.exe
+*.test
+/app
+/bin/
+/dist/
+
+# IDE
+.vscode/
+.idea/
+
+# OS garbage
+.DS_Store
+Thumbs.db
+
