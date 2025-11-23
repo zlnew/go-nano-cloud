@@ -7,7 +7,7 @@ type Router struct {
 	mux *http.ServeMux
 }
 
-func New() *Router {
+func NewRouter() *Router {
 	return &Router{
 		mux: http.NewServeMux(),
 	}

@@ -10,7 +10,7 @@ import (
 )
 
 func Init(s storage.Storage, env *config.BaseEnv) http.Handler {
-	r := New()
+	r := NewRouter()
 
 	public := middleware.UsePublic()
 	protected := middleware.UseProtected()

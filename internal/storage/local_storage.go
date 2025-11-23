@@ -71,8 +71,8 @@ func (l *LocalStorage) Delete(filename string) error {
 	return nil
 }
 
-func (l *LocalStorage) List() ([]string, error) {
-	var files []string
+func (l *LocalStorage) List() ([]FileList, error) {
+	var files []FileList
 
 	err := filepath.Walk(l.BasePath, func(path string, info fs.FileInfo, err error) error {
 		if err != nil {
@@ -80,12 +80,16 @@ func (l *LocalStorage) List() ([]string, error) {
 		}
 
 		if info != nil && !info.IsDir() {
-			files = append(files, strings.TrimPrefix(path, fmt.Sprintf("%v/", l.BasePath)))
+			files = append(files, FileList{
+				Path: path,
+				Name: info.Name(),
+				Size: info.Size(),
+			})
 		}
 		return nil
 	})
 	if err != nil {
-		return []string{}, err
+		return []FileList{}, err
 	}
 
 	return files, nil
