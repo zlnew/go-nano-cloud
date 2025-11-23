@@ -17,6 +17,12 @@ func (h *StorageHandler) List(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	resp, _ := json.MarshalIndent(filepaths, "", "  ")
+	resp, err := json.MarshalIndent(filepaths, "", "  ")
+	if err != nil {
+		http.Error(w, "failed to encode list", http.StatusInternalServerError)
+		return
+	}
+
+	w.Header().Set("Content-Type", "application/json")
 	w.Write(resp)
 }

@@ -4,12 +4,13 @@ package router
 import (
 	"net/http"
 
+	"go/mini-s3/internal/config"
 	"go/mini-s3/internal/http/handlers"
 	"go/mini-s3/internal/http/middleware"
 	"go/mini-s3/internal/storage"
 )
 
-func Init(s storage.Storage) http.Handler {
+func Init(s storage.Storage, env *config.BaseEnv) http.Handler {
 	mux := http.NewServeMux()
 
 	withMiddleware := middleware.Chain(
@@ -17,7 +18,7 @@ func Init(s storage.Storage) http.Handler {
 		middleware.Recoverer,
 	)
 
-	storageHandler := handlers.NewStorageHandler(s)
+	storageHandler := handlers.NewStorageHandler(s, env)
 
 	mux.Handle("/ping", withMiddleware(http.HandlerFunc(handlers.Ping)))
 	mux.Handle("/upload", withMiddleware(http.HandlerFunc(storageHandler.Upload)))

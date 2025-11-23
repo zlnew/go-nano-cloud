@@ -17,24 +17,24 @@ import (
 
 func main() {
 	godotenv.Load()
-	conf := config.Init()
-	s := storage.NewLocalStorage(conf.StorageLocalPath)
-	r := router.Init(s)
+	env := config.Init()
+	storage := storage.NewLocalStorage(env.StorageLocalPath)
+	httpHandler := router.Init(storage, env)
 
 	srv := &http.Server{
-		Addr:              conf.HTTPAddress,
-		Handler:           r,
-		ReadTimeout:       conf.HTTPReadTimeout,
-		WriteTimeout:      conf.HTTPWriteTimeout,
-		ReadHeaderTimeout: conf.HTTPReadHeaderTimeout,
-		IdleTimeout:       conf.HTTPIdleTimeout,
+		Addr:              env.HTTPAddress,
+		Handler:           httpHandler,
+		ReadTimeout:       env.HTTPReadTimeout,
+		WriteTimeout:      env.HTTPWriteTimeout,
+		ReadHeaderTimeout: env.HTTPReadHeaderTimeout,
+		IdleTimeout:       env.HTTPIdleTimeout,
 	}
 
 	go func() {
-		log.Printf("Server running on %v", conf.HTTPAddress)
+		log.Printf("server running on %v", env.HTTPAddress)
 
 		if err := srv.ListenAndServe(); err != nil && err != http.ErrServerClosed {
-			log.Fatalf("Server error: %v", err)
+			log.Fatalf("server error: %v", err)
 		}
 	}()
 
@@ -45,8 +45,8 @@ func main() {
 	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
 	defer cancel()
 
-	log.Println("Shutting down server...")
+	log.Println("shutting down server...")
 	if err := srv.Shutdown(ctx); err != nil {
-		log.Fatalf("Server forced shutdown: %v", err)
+		log.Fatalf("server forced shutdown: %v", err)
 	}
 }

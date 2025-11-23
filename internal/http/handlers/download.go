@@ -1,9 +1,13 @@
 package handlers
 
 import (
+	"errors"
 	"fmt"
+	"io/fs"
 	"net/http"
 	"strings"
+
+	"go/mini-s3/internal/storage"
 )
 
 func (h *StorageHandler) Download(w http.ResponseWriter, r *http.Request) {
@@ -20,7 +24,14 @@ func (h *StorageHandler) Download(w http.ResponseWriter, r *http.Request) {
 
 	file, err := h.Storage.Open(filename)
 	if err != nil {
-		http.NotFound(w, r)
+		switch {
+		case errors.Is(err, storage.ErrInvalidFilename):
+			http.Error(w, "invalid filename", http.StatusBadRequest)
+		case errors.Is(err, fs.ErrNotExist):
+			http.NotFound(w, r)
+		default:
+			http.Error(w, "failed to download file", http.StatusInternalServerError)
+		}
 		return
 	}
 
