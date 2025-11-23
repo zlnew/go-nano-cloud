@@ -6,10 +6,7 @@ import (
 )
 
 func (h *StorageHandler) Upload(w http.ResponseWriter, r *http.Request) {
-	if r.Method != http.MethodPost {
-		http.Error(w, "method not allowed", http.StatusMethodNotAllowed)
-		return
-	}
+	r.Body = http.MaxBytesReader(w, r.Body, h.Env.MaxRequestBodySize)
 
 	if err := r.ParseMultipartForm(h.Env.MaxMultipartMemory); err != nil {
 		http.Error(w, "invalid multipart form", http.StatusBadRequest)

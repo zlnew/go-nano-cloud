@@ -14,6 +14,7 @@ type BaseEnv struct {
 	HTTPReadHeaderTimeout time.Duration
 	HTTPIdleTimeout       time.Duration
 	StorageLocalPath      string
+	MaxRequestBodySize    int64
 	MaxMultipartMemory    int64
 }
 
@@ -25,7 +26,8 @@ func Init() *BaseEnv {
 		HTTPReadHeaderTimeout: getDurationEnv("HTTP_READ_HEADER_TIMEOUT", 2),
 		HTTPIdleTimeout:       getDurationEnv("HTTP_IDLE_TIMEOUT", 60),
 		StorageLocalPath:      getEnv("STORAGE_LOCAL_PATH", "uploads"),
-		MaxMultipartMemory:    getInt64Env("MAX_MULTIPART_MEMORY_MB", 10) * 1024 * 1024,
+		MaxRequestBodySize:    getInt64Env("MAX_REQUEST_BODY_SIZE", 20) * 1024 * 1024,
+		MaxMultipartMemory:    getInt64Env("MAX_MULTIPART_MEMORY", 8) * 1024 * 1024,
 	}
 }
 

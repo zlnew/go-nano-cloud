@@ -9,10 +9,11 @@ import (
 	"syscall"
 	"time"
 
-	"github.com/joho/godotenv"
 	"go/mini-s3/internal/config"
-	router "go/mini-s3/internal/http"
+	"go/mini-s3/internal/http/router"
 	"go/mini-s3/internal/storage"
+
+	"github.com/joho/godotenv"
 )
 
 func main() {

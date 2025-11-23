@@ -11,11 +11,6 @@ import (
 )
 
 func (h *StorageHandler) Download(w http.ResponseWriter, r *http.Request) {
-	if r.Method != http.MethodGet {
-		http.Error(w, "method not allowed", http.StatusMethodNotAllowed)
-		return
-	}
-
 	filename := strings.TrimPrefix(r.URL.Path, "/files/")
 	if filename == "" {
 		http.Error(w, "filename required", http.StatusBadRequest)
