@@ -2,9 +2,12 @@
 package config
 
 import (
+	"log"
 	"os"
 	"strconv"
 	"time"
+
+	"github.com/joho/godotenv"
 )
 
 type BaseEnv struct {
@@ -16,9 +19,12 @@ type BaseEnv struct {
 	StorageLocalPath      string
 	MaxRequestBodySize    int64
 	MaxMultipartMemory    int64
+	APIKey                string
 }
 
 func Init() *BaseEnv {
+	godotenv.Load()
+
 	return &BaseEnv{
 		HTTPAddress:           getEnv("HTTP_ADDRESS", ":3000"),
 		HTTPReadTimeout:       getDurationEnv("HTTP_READ_TIMEOUT", 5),
@@ -28,6 +34,7 @@ func Init() *BaseEnv {
 		StorageLocalPath:      getEnv("STORAGE_LOCAL_PATH", "uploads"),
 		MaxRequestBodySize:    getInt64Env("MAX_REQUEST_BODY_SIZE", 20) * 1024 * 1024,
 		MaxMultipartMemory:    getInt64Env("MAX_MULTIPART_MEMORY", 8) * 1024 * 1024,
+		APIKey:                getRequiredEnv("API_KEY"),
 	}
 }
 
@@ -64,4 +71,13 @@ func getInt64Env(key string, fallback int64) int64 {
 	}
 
 	return num
+}
+
+func getRequiredEnv(key string) string {
+	val := os.Getenv(key)
+	if val == "" {
+		log.Fatalf("%s is required", key)
+	}
+
+	return val
 }

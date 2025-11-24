@@ -12,12 +12,9 @@ import (
 	"go/nano-cloud/internal/config"
 	"go/nano-cloud/internal/http/router"
 	"go/nano-cloud/internal/storage"
-
-	"github.com/joho/godotenv"
 )
 
 func main() {
-	godotenv.Load()
 	env := config.Init()
 	storage := storage.NewLocalStorage(env.StorageLocalPath)
 	httpHandler := router.Init(storage, env)

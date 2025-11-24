@@ -2,8 +2,8 @@
 package router
 
 import (
+	"log"
 	"net/http"
-	"os"
 
 	"go/nano-cloud/internal/config"
 	"go/nano-cloud/internal/http/handlers"
@@ -33,7 +33,7 @@ func Init(s storage.Storage, env *config.BaseEnv) http.Handler {
 	r.Get("/public", publicStorageHandler.List)
 	r.Get("/public/{key:.+}", publicStorageHandler.Download)
 
-	protected := r.With(APIKey)
+	protected := r.With(APIKey(env.APIKey))
 
 	protected.Post("/public", publicStorageHandler.Upload)
 	protected.Post("/private", privateStorageHandler.Upload)
@@ -47,16 +47,18 @@ func Init(s storage.Storage, env *config.BaseEnv) http.Handler {
 	return r
 }
 
-func APIKey(next http.Handler) http.Handler {
-	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		apiKey := r.Header.Get("X-API-Key")
-		expected := os.Getenv("API_KEY")
+func APIKey(expected string) func(http.Handler) http.Handler {
+	return func(next http.Handler) http.Handler {
+		return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+			apiKey := r.Header.Get("X-API-Key")
 
-		if apiKey == "" || apiKey != expected {
-			http.Error(w, "unauthorized", http.StatusUnauthorized)
-			return
-		}
+			if apiKey == "" || apiKey != expected {
+				log.Printf("unauthorized request: %s %s", r.Method, r.URL.Path)
+				http.Error(w, "unauthorized", http.StatusUnauthorized)
+				return
+			}
 
-		next.ServeHTTP(w, r)
-	})
+			next.ServeHTTP(w, r)
+		})
+	}
 }
