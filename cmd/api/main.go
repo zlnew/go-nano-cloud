@@ -9,9 +9,9 @@ import (
 	"syscall"
 	"time"
 
-	"go/mini-s3/internal/config"
-	"go/mini-s3/internal/http/router"
-	"go/mini-s3/internal/storage"
+	"go/nano-cloud/internal/config"
+	"go/nano-cloud/internal/http/router"
+	"go/nano-cloud/internal/storage"
 
 	"github.com/joho/godotenv"
 )

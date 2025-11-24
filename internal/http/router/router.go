@@ -5,9 +5,9 @@ import (
 	"net/http"
 	"os"
 
-	"go/mini-s3/internal/config"
-	"go/mini-s3/internal/http/handlers"
-	"go/mini-s3/internal/storage"
+	"go/nano-cloud/internal/config"
+	"go/nano-cloud/internal/http/handlers"
+	"go/nano-cloud/internal/storage"
 
 	"github.com/go-chi/chi/v5"
 	"github.com/go-chi/chi/v5/middleware"

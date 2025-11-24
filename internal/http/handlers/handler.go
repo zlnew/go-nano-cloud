@@ -2,8 +2,8 @@
 package handlers
 
 import (
-	"go/mini-s3/internal/config"
-	"go/mini-s3/internal/storage"
+	"go/nano-cloud/internal/config"
+	"go/nano-cloud/internal/storage"
 )
 
 type StorageHandler struct {

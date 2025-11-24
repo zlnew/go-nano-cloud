@@ -7,7 +7,7 @@ import (
 	"net/http"
 
 	"github.com/go-chi/chi/v5"
-	"go/mini-s3/internal/storage"
+	"go/nano-cloud/internal/storage"
 )
 
 func (h *StorageHandler) Download(w http.ResponseWriter, r *http.Request) {

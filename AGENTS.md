@@ -11,7 +11,7 @@
 ## Build, Test, and Development Commands
 
 - `make run`: start the server (defaults to `HTTP_ADDRESS=:3000` and `STORAGE_LOCAL_PATH=uploads`).
-- `make build`: compile binary to `bin/mini-s3`.
+- `make build`: compile binary to `bin/nano-cloud`.
 - `make clean`: remove the built binary.
 - `go test ./...`: run all tests once they exist; add table-driven tests per handler and storage adapter.
 - `gofmt -w . && go vet ./...`: format and lint before sending changes.

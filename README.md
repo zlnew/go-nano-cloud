@@ -1,4 +1,4 @@
-# Mini S3 (Local Object Store)
+# go-nano-cloud
 
 Minimal HTTP service for uploading, listing, downloading, and deleting files on local disk. Two buckets are mounted by default: a public bucket that allows unauthenticated reads and a private bucket that is fully protected by an API key.
 
@@ -104,7 +104,7 @@ List responses are JSON arrays that include `path`, `name`, and `size` for each 
 
 ## Development Notes
 
-- Make targets: `make run` (start), `make build` (binary at `bin/mini-s3`), `make clean`.
+- Make targets: `make run` (start), `make build` (binary at `bin/nano-cloud`), `make clean`.
 - Format and lint: `gofmt -w . && go vet ./...`
 - Tests: `go test ./...` (add table-driven tests for handlers and storage).
 - Middleware composes via `middleware.Chain`; add lightweight cross-cutting concerns here.

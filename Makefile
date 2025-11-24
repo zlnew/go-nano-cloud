@@ -1,4 +1,4 @@
-APP_NAME=mini-s3
+APP_NAME=nano-cloud
 ENTRY=./cmd/api
 
 build:
@@ -9,4 +9,3 @@ run:
 
 clean:
 	rm -rf bin/$(APP_NAME)
-
