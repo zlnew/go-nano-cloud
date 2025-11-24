@@ -10,7 +10,7 @@ import (
 	"strings"
 )
 
-var ErrInvalidFilename = errors.New("invalid filename")
+var ErrInvalidPath = errors.New("invalid filepath")
 
 type LocalStorage struct {
 	BasePath string
@@ -31,8 +31,8 @@ func (l *LocalStorage) WithBucket(bucket string) *LocalStorage {
 	}
 }
 
-func (l *LocalStorage) Save(file io.Reader, filename string) error {
-	fullPath, err := l.safePath(filename)
+func (l *LocalStorage) Save(file io.Reader, filepathInput string) error {
+	fullPath, err := l.safePath(filepathInput)
 	if err != nil {
 		return err
 	}
@@ -55,8 +55,8 @@ func (l *LocalStorage) Save(file io.Reader, filename string) error {
 	return nil
 }
 
-func (l *LocalStorage) Open(filename string) ([]byte, error) {
-	fullPath, err := l.safePath(filename)
+func (l *LocalStorage) Open(filepathInput string) ([]byte, error) {
+	fullPath, err := l.safePath(filepathInput)
 	if err != nil {
 		return nil, err
 	}
@@ -69,8 +69,8 @@ func (l *LocalStorage) Open(filename string) ([]byte, error) {
 	return content, nil
 }
 
-func (l *LocalStorage) Delete(filename string) error {
-	fullPath, err := l.safePath(filename)
+func (l *LocalStorage) Delete(filepathInput string) error {
+	fullPath, err := l.safePath(filepathInput)
 	if err != nil {
 		return err
 	}
@@ -106,15 +106,15 @@ func (l *LocalStorage) List() ([]FileList, error) {
 	return files, nil
 }
 
-func (l *LocalStorage) safePath(filename string) (string, error) {
-	cleanName := filepath.Clean(filename)
+func (l *LocalStorage) safePath(filepathInput string) (string, error) {
+	cleanName := filepath.Clean(filepathInput)
 
 	if cleanName == "." || cleanName == "/" || cleanName == "" {
-		return "", fmt.Errorf("%w", ErrInvalidFilename)
+		return "", fmt.Errorf("%w", ErrInvalidPath)
 	}
 
 	if filepath.IsAbs(cleanName) || strings.HasPrefix(cleanName, "..") {
-		return "", fmt.Errorf("%w", ErrInvalidFilename)
+		return "", fmt.Errorf("%w", ErrInvalidPath)
 	}
 
 	fullPath := filepath.Join(l.BasePath, cleanName)
@@ -125,7 +125,7 @@ func (l *LocalStorage) safePath(filename string) (string, error) {
 	}
 
 	if !strings.HasPrefix(fullPath, base) && filepath.Clean(fullPath) != filepath.Clean(l.BasePath) {
-		return "", fmt.Errorf("%w", ErrInvalidFilename)
+		return "", fmt.Errorf("%w", ErrInvalidPath)
 	}
 
 	return fullPath, nil

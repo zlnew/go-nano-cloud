@@ -4,9 +4,9 @@ package storage
 import "io"
 
 type Storage interface {
-	Save(file io.Reader, filename string) error
-	Open(filename string) ([]byte, error)
-	Delete(filename string) error
+	Save(file io.Reader, filepath string) error
+	Open(filepath string) ([]byte, error)
+	Delete(filepath string) error
 	List() ([]FileList, error)
 }
 

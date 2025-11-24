@@ -5,27 +5,27 @@ import (
 	"fmt"
 	"io/fs"
 	"net/http"
-	"strings"
 
+	"github.com/go-chi/chi/v5"
 	"go/mini-s3/internal/storage"
 )
 
 func (h *StorageHandler) Delete(w http.ResponseWriter, r *http.Request) {
-	filename := strings.TrimPrefix(r.URL.Path, "/delete/")
-	if filename == "" {
-		http.Error(w, "filename required", http.StatusBadRequest)
+	filepath := chi.URLParam(r, "key")
+	if filepath == "" {
+		http.Error(w, "filepath required", http.StatusBadRequest)
 		return
 	}
 
-	err := h.Storage.Delete(filename)
+	err := h.Storage.Delete(filepath)
 	if err != nil {
 		if errors.Is(err, fs.ErrNotExist) {
 			http.NotFound(w, r)
 			return
 		}
 
-		if errors.Is(err, storage.ErrInvalidFilename) {
-			http.Error(w, "invalid filename", http.StatusBadRequest)
+		if errors.Is(err, storage.ErrInvalidPath) {
+			http.Error(w, "invalid filepath", http.StatusBadRequest)
 			return
 		}
 
@@ -33,5 +33,5 @@ func (h *StorageHandler) Delete(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	fmt.Fprintln(w, "deleted:", filename)
+	fmt.Fprintln(w, "deleted:", filepath)
 }

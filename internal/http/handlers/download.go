@@ -5,23 +5,23 @@ import (
 	"fmt"
 	"io/fs"
 	"net/http"
-	"strings"
 
+	"github.com/go-chi/chi/v5"
 	"go/mini-s3/internal/storage"
 )
 
 func (h *StorageHandler) Download(w http.ResponseWriter, r *http.Request) {
-	filename := strings.TrimPrefix(r.URL.Path, "/files/")
-	if filename == "" {
-		http.Error(w, "filename required", http.StatusBadRequest)
+	filepath := chi.URLParam(r, "key")
+	if filepath == "" {
+		http.Error(w, "filepath required", http.StatusBadRequest)
 		return
 	}
 
-	file, err := h.Storage.Open(filename)
+	file, err := h.Storage.Open(filepath)
 	if err != nil {
 		switch {
-		case errors.Is(err, storage.ErrInvalidFilename):
-			http.Error(w, "invalid filename", http.StatusBadRequest)
+		case errors.Is(err, storage.ErrInvalidPath):
+			http.Error(w, "invalid filepath", http.StatusBadRequest)
 		case errors.Is(err, fs.ErrNotExist):
 			http.NotFound(w, r)
 		default:
@@ -30,7 +30,7 @@ func (h *StorageHandler) Download(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	w.Header().Set("Content-Disposition", fmt.Sprintf("attachment; filename=%q", filename))
+	w.Header().Set("Content-Disposition", fmt.Sprintf("attachment; filename=%q", filepath))
 	w.Header().Set("Content-Type", "application/octet-stream")
 	w.Header().Set("Content-Length", fmt.Sprintf("%d", len(file)))
 
