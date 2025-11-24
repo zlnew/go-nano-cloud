@@ -11,7 +11,7 @@ import (
 )
 
 func (h *StorageHandler) Delete(w http.ResponseWriter, r *http.Request) {
-	filepath := chi.URLParam(r, "key")
+	filepath := chi.URLParam(r, "*")
 	if filepath == "" {
 		http.Error(w, "filepath required", http.StatusBadRequest)
 		return

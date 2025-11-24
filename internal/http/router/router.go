@@ -31,18 +31,18 @@ func Init(s storage.Storage, env *config.BaseEnv) http.Handler {
 	privateStorageHandler := handlers.NewStorageHandler(privateStorage, env)
 
 	r.Get("/public", publicStorageHandler.List)
-	r.Get("/public/{key:.+}", publicStorageHandler.Download)
+	r.Get("/public/*", publicStorageHandler.Download)
 
 	protected := r.With(APIKey(env.APIKey))
 
 	protected.Post("/public", publicStorageHandler.Upload)
 	protected.Post("/private", privateStorageHandler.Upload)
 
-	protected.Delete("/public/{key:.+}", publicStorageHandler.Delete)
-	protected.Delete("/private/{key:.+}", privateStorageHandler.Delete)
+	protected.Delete("/public/*", publicStorageHandler.Delete)
+	protected.Delete("/private/*", privateStorageHandler.Delete)
 
 	protected.Get("/private", privateStorageHandler.List)
-	protected.Get("/private/{key:.+}", privateStorageHandler.Download)
+	protected.Get("/private/*", privateStorageHandler.Download)
 
 	return r
 }
