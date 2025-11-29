@@ -1,6 +1,6 @@
 # go-nano-cloud
 
-Minimal HTTP service for uploading, listing, downloading, and deleting files on local disk. Two buckets are mounted by default: a public bucket that allows unauthenticated reads and a private bucket that is fully protected by an API key.
+Minimal HTTP service for serving, uploading, listing, downloading, and deleting files on local disk. Two buckets are mounted by default: a public bucket that allows unauthenticated reads and a private bucket that is fully protected by an API key.
 
 ## Features
 
